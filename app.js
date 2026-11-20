@@ -62,102 +62,35 @@ function uid(prefix = 'id') {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`;
 }
 
-// Default Initial State (Format: Nombre y Apellidos)
+// Default Initial State (Completely Empty — no invented groups or students)
 function createDefaultState() {
-  const today = getTodayISO();
   return {
-    updatedAt: Date.now(),
-    activeGroupId: 'grup_5a',
+    updatedAt: 0,
+    activeGroupId: '',
     activeTrimestre: '1r',
     activeView: 'daily', // 'daily' | 'accum'
-    activeSessionNum: 3,
-    groups: [
-      {
-        id: 'grup_5a',
-        name: '5è A',
-        students: [
-          { id: 'al_1', name: 'Marc Alberich Puig' },
-          { id: 'al_2', name: 'Laia Bosch Serra' },
-          { id: 'al_3', name: 'Pol Casals Vila' },
-          { id: 'al_4', name: 'Júlia Dalmau Ferrer' },
-          { id: 'al_5', name: 'Nil Esteve Roca' },
-          { id: 'al_6', name: 'Martina Font Martí' },
-          { id: 'al_7', name: 'Jan Garriga Soler' },
-          { id: 'al_8', name: 'Ona Huguet Pujol' },
-          { id: 'al_9', name: 'Èric Isern Valls' },
-          { id: 'al_10', name: 'Clàudia Jorba Prat' },
-          { id: 'al_11', name: 'Biel Llobet Costa' },
-          { id: 'al_12', name: 'Aina Masip Rovira' }
-        ],
-        trimestres: {
-          '1r': {
-            sessions: {
-              '1': {
-                sessionNum: 1,
-                date: '2026-11-12',
-                finalizedAt: Date.now() - 86400000 * 7,
-                absences: ['al_3'],
-                marks: {
-                  'al_1': {
-                    'necesser': [{ id: 'm_101', date: '2026-11-12', sessionNum: 1, note: 'No porta sabatilles' }]
-                  },
-                  'al_5': {
-                    'normes': [{ id: 'm_102', date: '2026-11-12', sessionNum: 1, note: '' }],
-                    'hidratacio': [{ id: 'm_104', date: '2026-11-12', sessionNum: 1, note: '' }]
-                  },
-                  'al_9': {
-                    'roba': [{ id: 'm_105', date: '2026-11-12', sessionNum: 1, note: 'Texans a classe' }]
-                  }
-                }
-              },
-              '2': {
-                sessionNum: 2,
-                date: '2026-11-17',
-                finalizedAt: Date.now() - 86400000 * 2,
-                absences: ['al_3', 'al_8'],
-                marks: {
-                  'al_1': {
-                    'necesser': [{ id: 'm_201', date: '2026-11-17', sessionNum: 2, note: '' }],
-                    'endrec': [{ id: 'm_202', date: '2026-11-17', sessionNum: 2, note: '' }]
-                  },
-                  'al_4': {
-                    'material': [{ id: 'm_203', date: '2026-11-17', sessionNum: 2, note: 'No ajuda a recollir' }]
-                  },
-                  'al_5': {
-                    'normes': [{ id: 'm_204', date: '2026-11-17', sessionNum: 2, note: '' }],
-                    'joc_net': [{ id: 'm_205', date: '2026-11-17', sessionNum: 2, note: 'Discussió durant el partit' }]
-                  }
-                }
-              }
-            },
-            drafts: {
-              '3': {
-                sessionNum: 3,
-                date: today,
-                absences: [],
-                marks: {}
-              }
-            }
-          }
-        }
-      },
-      {
-        id: 'grup_6b',
-        name: '6è B',
-        students: [
-          { id: 'al_601', name: 'Pau Arnal Torres' },
-          { id: 'al_602', name: 'Carla Bassa Llopis' },
-          { id: 'al_603', name: 'Oriol Colomer Grau' },
-          { id: 'al_604', name: 'Berta Duran Pineda' },
-          { id: 'al_605', name: 'Arnau Ferran Sala' },
-          { id: 'al_606', name: 'Nora Gomis Vidal' }
-        ],
-        trimestres: {
-          '1r': { sessions: {}, drafts: {} }
-        }
-      }
-    ]
+    activeSessionNum: 1,
+    groups: []
   };
+}
+
+// Strip legacy demo groups (grup_5a / grup_6b with demo IDs) if they were previously stored
+function stripLegacyDemoGroups(stObj) {
+  if (!stObj || !Array.isArray(stObj.groups)) return stObj;
+  stObj.groups = stObj.groups.filter(g => {
+    if (!g) return false;
+    const isDemo5A = g.id === 'grup_5a' && Array.isArray(g.students) && g.students.some(s => s.id === 'al_1' && s.name.includes('Alberich'));
+    const isDemo6B = g.id === 'grup_6b' && Array.isArray(g.students) && g.students.some(s => s.id === 'al_601' && s.name.includes('Arnal'));
+    return !isDemo5A && !isDemo6B;
+  });
+  if (stObj.groups.length > 0) {
+    if (!stObj.groups.some(g => g.id === stObj.activeGroupId)) {
+      stObj.activeGroupId = stObj.groups[0].id;
+    }
+  } else {
+    stObj.activeGroupId = '';
+  }
+  return stObj;
 }
 
 // =========================================================================
@@ -213,6 +146,7 @@ let activeCellNoteContext = null; // { studentId, catId }
 
 function normalizeStateNames(stObj) {
   if (!stObj || !Array.isArray(stObj.groups)) return stObj;
+  stripLegacyDemoGroups(stObj);
   stObj.groups.forEach(g => {
     if (Array.isArray(g.students)) {
       g.students.forEach(st => {
@@ -227,16 +161,18 @@ function loadStateFromLocal() {
   try {
     const rawV2 = localStorage.getItem('REGISTRE_DIARI_EF_STATE_V2');
     const rawV1 = localStorage.getItem('REGISTRE_DIARI_EF_STATE_V1');
-    const parsedV2 = rawV2 ? JSON.parse(rawV2) : null;
-    const parsedV1 = rawV1 ? JSON.parse(rawV1) : null;
+    const parsedV2 = rawV2 ? stripLegacyDemoGroups(JSON.parse(rawV2)) : null;
+    const parsedV1 = rawV1 ? stripLegacyDemoGroups(JSON.parse(rawV1)) : null;
+
+    const hasV2 = parsedV2 && Array.isArray(parsedV2.groups) && parsedV2.groups.length > 0;
+    const hasV1 = parsedV1 && Array.isArray(parsedV1.groups) && parsedV1.groups.length > 0;
 
     let chosen = null;
-    if (parsedV2 && Array.isArray(parsedV2.groups) && parsedV2.groups.length > 0 &&
-        parsedV1 && Array.isArray(parsedV1.groups) && parsedV1.groups.length > 0) {
+    if (hasV2 && hasV1) {
       chosen = (Number(parsedV1.updatedAt || 0) > Number(parsedV2.updatedAt || 0)) ? parsedV1 : parsedV2;
-    } else if (parsedV2 && Array.isArray(parsedV2.groups) && parsedV2.groups.length > 0) {
+    } else if (hasV2) {
       chosen = parsedV2;
-    } else if (parsedV1 && Array.isArray(parsedV1.groups) && parsedV1.groups.length > 0) {
+    } else if (hasV1) {
       chosen = parsedV1;
     }
 
@@ -390,35 +326,49 @@ async function syncWithSupabaseAccount(silent = true) {
   updateAccountStatusUI('syncing');
 
   try {
-    const remoteState = await fetchRemoteStateFromSupabase();
+    const rawRemoteState = await fetchRemoteStateFromSupabase();
+    const remoteGroupCountBefore = (rawRemoteState && Array.isArray(rawRemoteState.groups)) ? rawRemoteState.groups.length : 0;
+    const remoteState = rawRemoteState ? normalizeStateNames(JSON.parse(JSON.stringify(rawRemoteState))) : null;
+    const remoteHadDemoGroups = remoteState && Array.isArray(remoteState.groups) && (remoteState.groups.length < remoteGroupCountBefore);
 
     if (remoteState && Array.isArray(remoteState.groups) && remoteState.groups.length > 0) {
+      const localHasGroups = Array.isArray(state.groups) && state.groups.length > 0;
       const localTime = Number(state.updatedAt || 0);
       const remoteTime = Number(remoteState.updatedAt || 0);
 
-      if (syncMeta.pendingSync) {
-        // Local device has offline unsynced changes -> merge with remote and push
+      if (syncMeta.pendingSync && localHasGroups) {
         state = mergeStates(state, remoteState);
         saveStateToLocal(true);
         renderApp();
         await pushStateToSupabase(silent);
-      } else if (remoteTime >= localTime) {
-        // Cloud account has newer or current data -> load from cloud account
-        state = normalizeStateNames(remoteState);
+      } else if (!localHasGroups || remoteTime >= localTime) {
+        state = remoteState;
         saveStateToLocal(true);
         renderApp();
-        updateAccountStatusUI('connected');
+        if (remoteHadDemoGroups) {
+          await pushStateToSupabase(true);
+        } else {
+          updateAccountStatusUI('connected');
+        }
         if (!silent) showToast('✓ Grups i registres carregats del teu compte!', 'success');
       } else {
-        // Local is newer -> merge and push
         state = mergeStates(state, remoteState);
         saveStateToLocal(true);
         renderApp();
         await pushStateToSupabase(silent);
       }
-    } else {
-      // Cloud account has no data yet -> upload current groups and sessions to account
+    } else if (Array.isArray(state.groups) && state.groups.length > 0) {
+      // Cloud account has no real groups yet, upload local real groups
       await pushStateToSupabase(silent);
+    } else {
+      state = createDefaultState();
+      saveStateToLocal(true);
+      renderApp();
+      if (remoteHadDemoGroups) {
+        await pushStateToSupabase(true);
+      } else {
+        updateAccountStatusUI('connected');
+      }
     }
   } catch (err) {
     console.error('Error sincronitzant amb el compte:', err);
@@ -512,10 +462,16 @@ window.handleSignOut = async function() {
     } catch {}
   }
   currentUser = null;
-  syncMeta.cloudRowId = null;
   syncMeta.pendingSync = false;
   saveSyncMeta();
+  try {
+    localStorage.removeItem('REGISTRE_DIARI_EF_STATE_V2');
+    localStorage.removeItem('REGISTRE_DIARI_EF_STATE_V1');
+  } catch {}
+  state = createDefaultState();
   updateAccountStatusUI();
+  renderGroupsManagementModal();
+  renderApp();
   showToast('Sessió tancada.');
 };
 
@@ -713,9 +669,13 @@ function renderApp() {
 
   // 1. Render Course Cell Group Selector
   const groupSelect = document.getElementById('groupSelect');
-  groupSelect.innerHTML = state.groups.map(g =>
-    `<option value="${g.id}" ${g.id === state.activeGroupId ? 'selected' : ''}>${escapeHtml(g.name)}</option>`
-  ).join('');
+  if (state.groups.length === 0) {
+    groupSelect.innerHTML = `<option value="">—</option>`;
+  } else {
+    groupSelect.innerHTML = state.groups.map(g =>
+      `<option value="${g.id}" ${g.id === state.activeGroupId ? 'selected' : ''}>${escapeHtml(g.name)}</option>`
+    ).join('');
+  }
 
   // 2. Render Sheet Header & Top-Right View Toggle Button
   const isDaily = state.activeView === 'daily';
@@ -780,10 +740,13 @@ function renderSessionsStrip(tData) {
 function renderDailyTableBody(group, sessionObj) {
   const tbody = document.getElementById('registreTableBody');
   if (!group || group.students.length === 0) {
+    const emptyMsg = !currentUser
+      ? `Inicia sessió des de la roda dentada (<strong>⚙</strong> dalt a l'esquerra) per carregar els teus grups i alumnes.`
+      : `Encara no hi ha alumnes en aquest grup. Obre la roda dentada (<strong>⚙</strong> dalt a l'esquerra) per afegir-ne.`;
     tbody.innerHTML = `
       <tr>
         <td colspan="11" style="text-align:center; padding:1.5rem 0.75rem; color:var(--text-secondary); font-size:0.8rem;">
-          Encara no hi ha alumnes en aquest grup. Prem la roda dentada (dalt a l'esquerra) per afegir-ne.
+          ${emptyMsg}
         </td>
       </tr>
     `;
@@ -836,10 +799,13 @@ function renderDailyTableBody(group, sessionObj) {
 function renderAccumulatedTableBody(group, accumData) {
   const tbody = document.getElementById('registreTableBody');
   if (!group || group.students.length === 0) {
+    const emptyMsg = !currentUser
+      ? `Inicia sessió des de la roda dentada (<strong>⚙</strong> dalt a l'esquerra) per carregar els teus grups i alumnes.`
+      : `Encara no hi ha alumnes en aquest grup. Obre la roda dentada (<strong>⚙</strong> dalt a l'esquerra) per afegir-ne.`;
     tbody.innerHTML = `
       <tr>
         <td colspan="11" style="text-align:center; padding:1.5rem 0.75rem; color:var(--text-secondary); font-size:0.8rem;">
-          Encara no hi ha alumnes en aquest grup. Prem la roda dentada (dalt a l'esquerra) per afegir-ne.
+          ${emptyMsg}
         </td>
       </tr>
     `;
@@ -1716,15 +1682,11 @@ function initEventListeners() {
 
   // Delete Group
   document.getElementById('btnDeleteGroup').addEventListener('click', () => {
-    if (state.groups.length <= 1) {
-      alert('Ha de quedar com a mínim un grup a l’aplicació.');
-      return;
-    }
     const grp = getActiveGroup();
     if (!grp) return;
     if (!confirm(`Segur que vols eliminar el grup "${grp.name}" i tots els seus registres?`)) return;
     state.groups = state.groups.filter(g => g.id !== grp.id);
-    state.activeGroupId = state.groups[0].id;
+    state.activeGroupId = state.groups.length > 0 ? state.groups[0].id : '';
     saveStateToLocal();
     renderGroupsManagementModal();
     renderApp();
