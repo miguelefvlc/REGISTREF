@@ -233,12 +233,11 @@ body {
   display: grid;
   grid-template-columns: repeat(35, minmax(0, 1fr));
   border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  border-radius: 0;
   background: var(--bg-surface);
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
 }
 
 .session-num-cell {
@@ -289,11 +288,10 @@ body {
   box-sizing: border-box;
   overflow: visible;
   border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-md);
+  border-radius: 0;
   background: var(--bg-surface);
   position: relative;
   touch-action: pan-y;
-  box-shadow: var(--shadow-card);
 }
 
 .registre-table {

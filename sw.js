@@ -1,5 +1,5 @@
 // Service worker: makes REGISTRE EF installable as a full-screen standalone PWA and usable offline.
-const CACHE = 'registre-ef-cache-v9';
+const CACHE = 'registre-ef-cache-v10';
 const PRECACHE = [
   './',
   './index.html',
