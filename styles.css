@@ -228,12 +228,14 @@ html, body {
 
 .session-num-cell {
   border-right: 1px solid var(--border-grid);
-  height: 20px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.6rem;
+  font-size: 0.46rem;
   font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
   cursor: pointer;
@@ -241,6 +243,7 @@ html, body {
   user-select: none;
   background: var(--bg-surface);
   min-width: 0;
+  padding: 0;
   transition: background-color 0.12s ease, color 0.12s ease;
 }
 
@@ -1145,6 +1148,12 @@ html, body {
     width: 18px;
     height: 18px;
     font-size: 0.63rem;
+  }
+
+  .session-num-cell {
+    height: 17px;
+    font-size: 0.41rem;
+    letter-spacing: -0.05em;
   }
 }
 
