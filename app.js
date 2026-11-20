@@ -235,11 +235,24 @@ function mergeStates(primaryState, secondaryState) {
         const primT = primGroup.trimestres[tKey];
         const secT = secGroup.trimestres[tKey];
 
+        if (secT.deletedSessions) {
+          if (!primT.deletedSessions) primT.deletedSessions = {};
+          Object.keys(secT.deletedSessions).forEach(sNum => {
+            const delAt = Number(secT.deletedSessions[sNum] || 0);
+            primT.deletedSessions[sNum] = Math.max(Number(primT.deletedSessions[sNum] || 0), delAt);
+            if (primT.sessions && primT.sessions[sNum] && Number(primT.sessions[sNum].finalizedAt || 0) < delAt) {
+              delete primT.sessions[sNum];
+            }
+          });
+        }
+
         if (secT.sessions) {
           if (!primT.sessions) primT.sessions = {};
           Object.keys(secT.sessions).forEach(sNum => {
             const primSess = primT.sessions[sNum];
             const secSess = secT.sessions[sNum];
+            const delAt = Number((primT.deletedSessions && primT.deletedSessions[sNum]) || 0);
+            if (Number(secSess.finalizedAt || 0) <= delAt) return;
             if (!primSess || (Number(secSess.finalizedAt || 0) > Number(primSess.finalizedAt || 0))) {
               primT.sessions[sNum] = JSON.parse(JSON.stringify(secSess));
             }
@@ -704,6 +717,11 @@ function renderApp() {
       ? 'Actualitzar sessió'
       : 'Finalitzar sessió';
 
+    const resetBtn = document.getElementById('btnResetSavedSession');
+    if (resetBtn) {
+      resetBtn.style.display = isFinalized ? 'inline-flex' : 'none';
+    }
+
     renderDailyTableBody(group, sessionObj);
   } else {
     dailyFooterActions.style.display = 'none';
@@ -1093,6 +1111,9 @@ function confirmFinalizeCurrentSession() {
     marks: normalizedMarks
   };
 
+  if (tData.deletedSessions) {
+    delete tData.deletedSessions[sKey];
+  }
   delete tData.drafts[sKey];
 
   const savedNum = state.activeSessionNum;
@@ -1107,6 +1128,25 @@ function confirmFinalizeCurrentSession() {
   closeModal('modalFinalizeConfirm');
   renderApp();
   showToast(`✓ Sessió #${savedNum} guardada a l'Acumulat!`, 'success');
+}
+
+function resetCurrentSavedSession() {
+  const tData = getActiveSessionsContainer();
+  const sKey = String(state.activeSessionNum);
+  if (!tData.sessions[sKey]) return;
+
+  if (!confirm(`Vols esborrar la Sessió #${state.activeSessionNum} guardada i deixar-la novament en blanc? (També es descomptarà de l'Acumulat)`)) {
+    return;
+  }
+
+  delete tData.sessions[sKey];
+  delete tData.drafts[sKey];
+  if (!tData.deletedSessions) tData.deletedSessions = {};
+  tData.deletedSessions[sKey] = Date.now();
+
+  saveStateToLocal();
+  renderApp();
+  showToast(`✓ Sessió #${state.activeSessionNum} deixada en blanc`, 'success');
 }
 
 /* ==========================================================================
@@ -1477,9 +1517,10 @@ function initEventListeners() {
     renderApp();
   });
 
-  // Finalize Session Button at the bottom corner of Daily View
+  // Finalize & Reset Saved Session Buttons at the bottom corner of Daily View
   document.getElementById('btnFinalizeSessionEnd').addEventListener('click', openFinalizeSessionModal);
   document.getElementById('btnConfirmFinalizeSession').addEventListener('click', confirmFinalizeCurrentSession);
+  document.getElementById('btnResetSavedSession').addEventListener('click', resetCurrentSavedSession);
 
   // Exportar PDF Button at the bottom corner of Accumulated View
   document.getElementById('btnExportPDFEnd').addEventListener('click', () => {

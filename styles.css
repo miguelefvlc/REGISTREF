@@ -665,12 +665,25 @@ html, body {
   line-height: 1.35;
 }
 
-/* Footer Actions (Finalitzar sessió / Exportar PDF) */
+/* Footer Actions (Finalitzar sessió / Deixar en blanc / Exportar PDF) */
 .sheet-footer-actions {
   width: 100%;
   margin-top: 0.5rem;
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.btn-danger-outline {
+  background: var(--bg-surface);
+  border-color: #fda4af;
+  color: var(--danger-dark);
+}
+
+.btn-danger-outline:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
 }
 
 .btn-finalize-end {
