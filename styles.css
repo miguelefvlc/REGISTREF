@@ -3,29 +3,29 @@
   --bg-app: #ffffff;
   --bg-surface: #ffffff;
   --bg-subtle: #f8fafc;
-  --bg-row-even: #f9fbfd;
+  --bg-row-even: #fbfcfe;
   --bg-row-hover: #f1f5f9;
   
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
 
-  --border-strong: #1e293b;
-  --border-grid: #cbd5e1;
+  --border-strong: #334155;
+  --border-grid: #e2e8f0;
   --border-medium: #cbd5e1;
-  --border-light: #e2e8f0;
+  --border-light: #f1f5f9;
 
   /* Benestar Personal (Refined Nordic Sky Palette) */
-  --benestar-header-bg: #d2ebf7;
-  --benestar-col-bg: #e7f5fc;
+  --benestar-header-bg: #dbeafe;
+  --benestar-col-bg: #f0f9ff;
   --benestar-accent: #0284c7;
-  --benestar-text: #0c4a6e;
+  --benestar-text: #0369a1;
 
   /* Actitud i Participació (Refined Warm Champagne Palette) */
-  --actitud-header-bg: #f3e6c3;
-  --actitud-col-bg: #faf3df;
+  --actitud-header-bg: #fef3c7;
+  --actitud-col-bg: #fffbeb;
   --actitud-accent: #d97706;
-  --actitud-text: #78350f;
+  --actitud-text: #92400e;
 
   /* Brand & Actions */
   --primary: #0f172a;
@@ -34,18 +34,20 @@
   --accent-blue-light: #eff6ff;
   --success: #0f172a;
   --success-hover: #1e293b;
-  --danger: #e11d48;
-  --danger-dark: #be123c;
+  --danger: #f43f5e;
+  --danger-dark: #e11d48;
   --danger-light: #ffe4e6;
 
   /* Shadows & Radius */
   --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.14), 0 4px 10px -3px rgba(15, 23, 42, 0.06);
-  --radius-sm: 4px;
-  --radius-md: 7px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.07);
+  --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.12), 0 4px 10px -3px rgba(15, 23, 42, 0.05);
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
   /* Compact Square Table Dimensions (205 + 10*32 = 525px, exact multiple of 35 sessions) */
   --student-col-width: 205px;
@@ -84,9 +86,9 @@ body {
 /* Discreet Corner Buttons (Flush with Left and Right Document Borders) */
 .corner-icon-btn {
   position: relative;
-  width: 26px;
-  height: 26px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   background: transparent;
   color: #64748b;
@@ -100,29 +102,34 @@ body {
 }
 
 .corner-top-left {
-  margin-left: -3px;
+  margin-left: -2px;
 }
 
 .corner-top-right {
-  margin-right: -3px;
+  margin-right: -2px;
 }
 
 .corner-icon-btn svg {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   stroke-width: 1.85;
 }
 
 .corner-icon-btn:hover {
   background: var(--bg-subtle);
   color: var(--text-primary);
-  border-color: var(--border-light);
+  border-color: var(--border-grid);
+}
+
+.corner-icon-btn:active {
+  transform: scale(0.94);
 }
 
 .corner-top-right.active-view-mode {
   background: #0f172a;
   color: #ffffff;
   border-color: #0f172a;
+  box-shadow: var(--shadow-sm);
 }
 
 /* Tiny status dot on the gear icon for Supabase account sync status */
@@ -189,8 +196,8 @@ body {
 /* Sheet Header (Gear flush left, Title centered, Accumulated logo flush right) */
 .sheet-header {
   width: 100%;
-  margin-bottom: 0.25rem;
-  min-height: 28px;
+  margin-bottom: 0.35rem;
+  min-height: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -198,9 +205,9 @@ body {
 }
 
 .sheet-title {
-  font-size: 1.12rem;
+  font-size: 1.05rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: #0f172a;
   line-height: 1.1;
   text-align: center;
@@ -214,27 +221,29 @@ body {
 }
 
 .sessions-strip-header {
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--text-secondary);
-  margin-bottom: 0.14rem;
+  margin-bottom: 0.2rem;
 }
 
 .sessions-strip {
   display: grid;
   grid-template-columns: repeat(35, minmax(0, 1fr));
   border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
   background: var(--bg-surface);
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .session-num-cell {
   border-right: 1px solid var(--border-grid);
-  height: 18px;
+  height: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,9 +289,11 @@ body {
   box-sizing: border-box;
   overflow: visible;
   border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
   background: var(--bg-surface);
   position: relative;
   touch-action: pan-y;
+  box-shadow: var(--shadow-card);
 }
 
 .registre-table {
@@ -337,11 +348,11 @@ body {
 .curs-cell-select {
   width: 100%;
   height: 100%;
-  min-height: 92px;
+  min-height: 90px;
   border: none;
   background: transparent;
   font-family: inherit;
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.03em;
@@ -349,36 +360,54 @@ body {
   text-align-last: center;
   cursor: pointer;
   outline: none;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
   appearance: none;
   -webkit-appearance: none;
 }
 
+/* Subtle modern dropdown hint on the course cell */
+.curs-header-cell::after {
+  content: "▾";
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.curs-header-cell:hover::after {
+  opacity: 1;
+  transform: translateY(1px);
+}
+
 /* Group Category Headers (BENESTAR PERSONAL / ACTITUD I PARTICIPACIÓ) */
 .registre-table th.group-cat-header {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.22rem 0.25rem;
+  padding: 0.25rem 0.35rem;
   text-align: center;
-  border-bottom: 1px solid #94a3b8;
+  border-bottom: 1px solid var(--border-medium);
 }
 
 .registre-table th.group-cat-header.benestar {
   background-color: var(--benestar-header-bg);
-  color: #0c4a6e;
+  color: var(--benestar-text);
   border-right: 1.5px solid var(--border-strong);
 }
 
 .registre-table th.group-cat-header.actitud {
   background-color: var(--actitud-header-bg);
-  color: #78350f;
+  color: var(--actitud-text);
 }
 
 /* Vertical Sub-Column Headers (Square cell width via table-layout: fixed) */
 .registre-table th.vertical-col-header {
-  height: 76px;
+  height: 74px;
   padding: 0.24rem 0;
   vertical-align: bottom;
   text-align: center;
@@ -388,7 +417,7 @@ body {
 
 .registre-table th.vertical-col-header.benestar-col {
   background-color: var(--benestar-col-bg);
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .registre-table th.vertical-col-header.benestar-last {
@@ -397,25 +426,26 @@ body {
 
 .registre-table th.vertical-col-header.actitud-col {
   background-color: var(--actitud-col-bg);
-  color: #0f172a;
+  color: var(--text-primary);
 }
 
 .vertical-text-wrap {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   margin: 0 auto;
   display: inline-block;
   text-transform: uppercase;
+  color: #334155;
 }
 
 /* Compact Student Rows (Square cell height) */
 .registre-table tbody tr {
   height: var(--cell-size);
-  transition: background-color 0.1s ease, opacity 0.15s ease;
+  transition: background-color 0.12s ease;
 }
 
 .registre-table tbody tr:nth-child(even) {
@@ -434,11 +464,12 @@ body {
   height: var(--cell-size);
   position: relative;
   border-right: 1.5px solid var(--border-strong) !important;
-  padding: 0 0.22rem 0 0.45rem;
+  padding: 0 0.35rem 0 0.45rem;
   cursor: pointer;
   user-select: none;
   vertical-align: middle;
   touch-action: pan-y manipulation;
+  transition: background-color 0.12s ease;
 }
 
 .registre-table tbody tr:nth-child(odd) .student-name-cell {
@@ -465,38 +496,40 @@ body {
 .student-name-left {
   display: flex;
   align-items: center;
-  gap: 0.28rem;
+  gap: 0.25rem;
   min-width: 0;
   flex: 1;
 }
 
 .student-index {
-  font-size: 0.66rem;
+  font-size: 0.58rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
-  width: 16px;
+  width: 14px;
   flex-shrink: 0;
+  text-align: right;
+  margin-right: 0.15rem;
 }
 
 .student-fullname {
-  font-size: 0.76rem;
+  font-size: 0.67rem;
   font-weight: 500;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 /* Small Square Faltes Badge Flush to the Far Right of the Student Name Cell (in Acumulat) */
 .student-faltes-square {
-  width: 21px;
-  height: 21px;
-  border-radius: 4px;
-  font-size: 0.68rem;
-  font-weight: 800;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  font-size: 0.65rem;
+  font-weight: 750;
   font-variant-numeric: tabular-nums;
   display: inline-flex;
   align-items: center;
@@ -509,8 +542,8 @@ body {
 
 .student-faltes-square.has-faltes {
   background: #ffe4e6;
-  color: #be123c;
-  border: 1px solid #fda4af;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
 }
 
 .student-faltes-square.has-faltes:hover {
@@ -521,7 +554,7 @@ body {
 .student-faltes-square.zero-faltes {
   background: transparent;
   color: #cbd5e1;
-  border: 1px solid #e2e8f0;
+  border: 1px solid transparent;
   font-weight: 500;
 }
 
@@ -546,27 +579,27 @@ body {
   line-height: 1.35;
 }
 
-/* Exaggerated Attenuated Row for Absent Student (No "FALTA" pill, no strikethrough on name) */
+/* Modern Attenuated Row for Absent Student (Clean muted look, no strikethrough) */
 .registre-table tbody tr.row-absent {
-  background-color: #e2e8f0 !important;
+  background-color: #f8fafc !important;
 }
 
 .registre-table tbody tr.row-absent .student-name-cell {
-  background-color: #e2e8f0 !important;
+  background-color: #f8fafc !important;
 }
 
 .registre-table tbody tr.row-absent .student-index,
 .registre-table tbody tr.row-absent .student-fullname {
-  opacity: 0.22;
+  opacity: 0.30;
   color: #64748b;
   text-decoration: none;
   font-style: normal;
 }
 
 .registre-table tbody tr.row-absent .conduct-cell {
-  opacity: 0.15;
+  opacity: 0.18;
   pointer-events: none;
-  background-color: #cbd5e1 !important;
+  background-color: #f1f5f9 !important;
 }
 
 /* Square Conduct Data Cells */
@@ -578,7 +611,7 @@ body {
   cursor: pointer;
   user-select: none;
   position: relative;
-  transition: background-color 0.12s ease;
+  transition: background-color 0.12s ease, transform 0.08s ease;
   touch-action: pan-y manipulation;
 }
 
@@ -587,17 +620,35 @@ body {
 }
 
 .conduct-cell:hover {
-  background-color: rgba(15, 23, 42, 0.04);
+  background-color: rgba(15, 23, 42, 0.03);
 }
 
-/* Painted Red Cell in Daily View (Sophisticated Crimson) */
+.conduct-cell:active {
+  transform: scale(0.95);
+}
+
+/* Painted Red Cell in Daily View (Modern Crimson Rose) */
 .conduct-cell.is-marked {
-  background-color: #e11d48 !important;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  background-color: #f43f5e !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .conduct-cell.is-marked:hover {
-  background-color: #be123c !important;
+  background-color: #e11d48 !important;
+}
+
+/* Subtle modern corner indicator dot when a painted cell has an observation note */
+.conduct-cell.is-marked.has-note::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
 }
 
 /* ACUMULAT VIEW: Clean Number Inside Square Cell */
@@ -607,9 +658,9 @@ body {
   justify-content: center;
   min-width: 21px;
   height: 21px;
-  padding: 0 0.25rem;
-  border-radius: 4px;
-  font-size: 0.74rem;
+  padding: 0 0.2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -621,19 +672,20 @@ body {
 }
 
 .accum-zero {
-  color: #e2e8f0;
-  font-size: 0.65rem;
+  color: #cbd5e1;
+  font-size: 0.62rem;
   font-weight: 400;
 }
 
 .accum-benestar-1 {
   background: #e0f2fe;
-  color: #0369a1;
+  color: #0284c7;
 }
 
 .accum-benestar-high {
   background: #0284c7;
   color: #ffffff;
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
 }
 
 .accum-actitud-1 {
@@ -644,12 +696,13 @@ body {
 .accum-actitud-high {
   background: #d97706;
   color: #ffffff;
+  box-shadow: 0 1px 3px rgba(217, 119, 6, 0.3);
 }
 
 .accum-faltes-badge {
   background: #ffe4e6;
-  color: #be123c;
-  border: 1px solid #fda4af;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
 }
 
 /* Hover Tooltip for PC */
@@ -708,15 +761,19 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  padding: 0.38rem 0.75rem;
+  padding: 0.40rem 0.82rem;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
 }
 
 .btn svg {
@@ -739,20 +796,36 @@ body {
 .btn-primary {
   background: var(--primary);
   color: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.08);
 }
 
 .btn-primary:hover {
   background: var(--primary-hover);
+  box-shadow: 0 2px 4px -1px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
 }
 
 .btn-success {
   background: #0f172a;
   color: #ffffff;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.08);
 }
 
 .btn-success:hover {
   background: #1e293b;
+  box-shadow: 0 2px 4px -1px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.btn-danger-outline {
+  background: var(--bg-surface);
+  border-color: #fecdd3;
+  color: var(--danger-dark);
+}
+
+.btn-danger-outline:hover {
+  background: var(--danger-light);
+  border-color: var(--danger);
 }
 
 .btn-danger-ghost {
@@ -775,7 +848,8 @@ body {
   position: fixed;
   inset: 0;
   background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 200;
   display: none;
   align-items: center;
@@ -789,16 +863,16 @@ body {
 
 .modal-card {
   background: var(--bg-surface);
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   max-width: 520px;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-light);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   overflow: hidden;
-  animation: modalFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: modalFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-card.modal-sm {
@@ -1130,36 +1204,42 @@ body {
 
 @media (max-width: 640px) {
   .sheet-title {
-    font-size: 1rem;
+    font-size: 0.98rem;
+    letter-spacing: 0.1em;
   }
 
   .curs-cell-select {
-    font-size: 1.2rem;
-    min-height: 78px;
+    font-size: 1.15rem;
+    min-height: 74px;
   }
 
   .registre-table th.vertical-col-header {
-    height: 66px;
+    height: 64px;
   }
 
   .vertical-text-wrap {
-    font-size: 0.57rem;
+    font-size: 0.54rem;
+  }
+
+  .student-index {
+    font-size: 0.53rem;
+    width: 12px;
   }
 
   .student-fullname {
-    font-size: 0.71rem;
+    font-size: 0.62rem;
   }
 
   .student-faltes-square {
-    width: 18px;
-    height: 18px;
-    font-size: 0.63rem;
+    width: 17px;
+    height: 17px;
+    font-size: 0.60rem;
   }
 
   .session-num-cell {
-    height: 17px;
-    font-size: 0.41rem;
-    letter-spacing: -0.05em;
+    height: 18px;
+    font-size: 0.42rem;
+    letter-spacing: -0.04em;
   }
 }
 

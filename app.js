@@ -787,7 +787,8 @@ function renderDailyTableBody(group, sessionObj) {
       const colClass = [
         'conduct-cell',
         cat.isLastInGroup ? 'benestar-last' : '',
-        isMarked ? 'is-marked' : ''
+        isMarked ? 'is-marked' : '',
+        (isMarked && hasNote) ? 'has-note' : ''
       ].filter(Boolean).join(' ');
 
       const tooltipAttr = isMarked && hasNote
