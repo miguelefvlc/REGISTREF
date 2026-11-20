@@ -1,0 +1,135 @@
+// Generate high-fidelity REGISTRE EF logo SVG matching the user's reference image
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+// Design on 200x200 viewBox
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Clipboard Outline Gradient: Blue -> Sky -> Teal -> Cyan -> Blue -->
+    <linearGradient id="boardGrad" x1="50" y1="170" x2="150" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="25%" stop-color="#0284c7" />
+      <stop offset="48%" stop-color="#0ea5e9" />
+      <stop offset="68%" stop-color="#14b8a6" />
+      <stop offset="85%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <!-- Head Gradient: Bright green to rich athletic emerald -->
+    <linearGradient id="headGrad" x1="100" y1="72" x2="100" y2="98" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4ade80" />
+      <stop offset="40%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+
+    <!-- Green Checkmark Arm Gradient -->
+    <linearGradient id="greenArmGrad" x1="72" y1="96" x2="102" y2="132" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#84cc16" />
+      <stop offset="35%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+
+    <!-- Red/Orange Dynamic Under-Ribbon Gradient -->
+    <linearGradient id="orangeRibbonGrad" x1="92" y1="134" x2="148" y2="82" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="30%" stop-color="#dc2626" />
+      <stop offset="60%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+
+    <!-- Golden Yellow Swoosh Gradient -->
+    <linearGradient id="goldSwooshGrad" x1="96" y1="130" x2="174" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="30%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+
+    <!-- Subtle soft shadow for depth on swoosh -->
+    <filter id="softGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <!-- 1. The Clipboard Outline -->
+  <!-- Left Side, Bottom, and Lower-Right Up to Gap -->
+  <path d="
+    M 78 36
+    L 62 36
+    A 15 15 0 0 0 47 51
+    L 47 149
+    A 15 15 0 0 0 62 164
+    L 138 164
+    A 15 15 0 0 0 153 149
+    L 153 118
+  " stroke="url(#boardGrad)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Upper-Right Segment (above gap) and Clip -->
+  <path d="
+    M 153 72
+    L 153 51
+    A 15 15 0 0 0 138 36
+    L 122 36
+    C 122 36, 121 28, 116 23
+    C 112 19, 107 19, 107 19
+    C 107 16, 104 13, 100 13
+    C 96 13, 93 16, 93 19
+    C 93 19, 88 19, 84 23
+    C 79 28, 78 36, 78 36
+  " stroke="url(#boardGrad)" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Clip Inner Loop / Handle Opening -->
+  <path d="
+    M 88 32
+    C 88 27, 92 23, 100 23
+    C 108 23, 112 27, 112 32
+  " stroke="url(#boardGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
+
+  <!-- 2. The Student / Athlete Figure (Head) -->
+  <circle cx="100" cy="85" r="11" fill="url(#headGrad)" filter="url(#softGlow)" />
+
+  <!-- 3. Dynamic Checkmark Figure (Body + Celebratory Swoosh) -->
+  <!-- Layer A: Red/Orange Under-Ribbon -->
+  <path d="
+    M 94 116
+    C 98 126, 102 133, 106 133
+    C 112 133, 124 118, 139 98
+    C 148 85, 158 70, 168 56
+    C 161 68, 150 85, 140 98
+    C 128 114, 116 128, 107 127
+    C 101 126, 96 120, 94 116
+    Z
+  " fill="url(#orangeRibbonGrad)" />
+
+  <!-- Layer B: The Main Vibrant Green Checkmark Left Wing & Core Vertex -->
+  <path d="
+    M 73 103
+    C 70 100, 71 95, 75 92
+    C 79 89, 84 90, 87 94
+    L 99 111
+    C 102 115, 106 117, 110 115
+    C 114 113, 120 107, 127 98
+    L 133 104
+    C 124 116, 116 125, 108 126
+    C 100 127, 93 121, 88 114
+    Z
+  " fill="url(#greenArmGrad)" filter="url(#softGlow)" />
+
+  <!-- Layer C: Golden-Yellow Upward Celebratory Swoosh -->
+  <path d="
+    M 103 124
+    C 112 124, 126 110, 143 88
+    C 155 72, 166 57, 175 44
+    C 173 50, 166 63, 157 76
+    C 144 95, 129 113, 117 121
+    C 110 125, 106 125, 103 124
+    Z
+  " fill="url(#goldSwooshGrad)" filter="url(#softGlow)" />
+</svg>
+`;
+
+fs.writeFileSync(path.join(ROOT, 'icons', 'logo-preview.svg'), svg, 'utf8');
+console.log('Saved logo-preview.svg');

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>REGISTRE EF</title>
   <!-- PWA / Standalone App Mode (No browser bars, full app feel like ARMYMAKER) -->
-  <link rel="manifest" href="./manifest.webmanifest?v=3" />
+  <link rel="manifest" href="./manifest.webmanifest?v=4" />
   <meta name="theme-color" content="#ffffff" />
   <meta name="application-name" content="REGISTRE EF" />
   <meta name="mobile-web-app-capable" content="yes" />
@@ -13,24 +13,24 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="REGISTRE EF" />
   <meta name="msapplication-TileColor" content="#0f172a" />
-  <meta name="msapplication-TileImage" content="./icons/icon-144.png?v=3" />
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=3" />
-  <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152x152.png?v=3" />
-  <link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167x167.png?v=3" />
-  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180x180.png?v=3" />
-  <link rel="apple-touch-icon-precomposed" href="./icons/apple-touch-icon.png?v=3" />
-  <link rel="shortcut icon" href="./favicon.ico?v=3" />
-  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="./favicon.ico?v=3" />
-  <link rel="icon" type="image/svg+xml" sizes="any" href="./icons/favicon.svg?v=3" />
-  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png?v=3" />
-  <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon-48.png?v=3" />
-  <link rel="icon" type="image/png" sizes="96x96" href="./icons/icon-96.png?v=3" />
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=3" />
-  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png?v=3" />
+  <meta name="msapplication-TileImage" content="./icons/icon-144.png?v=4" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png?v=4" />
+  <link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-touch-icon-152x152.png?v=4" />
+  <link rel="apple-touch-icon" sizes="167x167" href="./icons/apple-touch-icon-167x167.png?v=4" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-180x180.png?v=4" />
+  <link rel="apple-touch-icon-precomposed" href="./icons/apple-touch-icon.png?v=4" />
+  <link rel="shortcut icon" href="./favicon.ico?v=4" />
+  <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="./favicon.ico?v=4" />
+  <link rel="icon" type="image/svg+xml" sizes="any" href="./icons/favicon.svg?v=4" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png?v=4" />
+  <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon-48.png?v=4" />
+  <link rel="icon" type="image/png" sizes="96x96" href="./icons/icon-96.png?v=4" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png?v=4" />
+  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=6" />
+  <link rel="stylesheet" href="styles.css?v=7" />
   <!-- Supabase Auth & Cloud Persistence (Same system as ARMYMAKER) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./config.js?v=3"></script>
@@ -50,7 +50,10 @@
           <span class="corner-cloud-dot" id="cloudStatusDot"></span>
         </button>
 
-        <h2 class="sheet-title" id="sheetMainTitle">REGISTRE DIARI</h2>
+        <div class="sheet-title-wrapper">
+          <img src="./icons/logo.png?v=4" class="sheet-header-logo" alt="Logo REGISTRE EF" />
+          <h2 class="sheet-title" id="sheetMainTitle">REGISTRE DIARI</h2>
+        </div>
 
         <button type="button" class="corner-icon-btn corner-top-right" id="btnToggleViewMode" title="Canviar entre Registre Diari i Registre Acumulat" aria-label="Registre Acumulat">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
