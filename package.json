@@ -1,0 +1,23 @@
+{
+  "name": "registre-diari-ef",
+  "version": "1.0.0",
+  "description": "REGISTRE DIARI EF — Registre Diari i Acumulat d'Educació Física",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/miguelefvlc/REGISTREF.git"
+  },
+  "homepage": "https://miguelefvlc.github.io/REGISTREF/",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "preview": "node server.js",
+    "sync": "node scripts/auto_sync.js"
+  },
+  "keywords": [
+    "educacio-fisica",
+    "registre-diari",
+    "pwa"
+  ],
+  "license": "MIT"
+}

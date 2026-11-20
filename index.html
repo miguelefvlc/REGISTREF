@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Registre EF" />
+  <title>Registre Diari EF — Educació Física</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Supabase Auth & Cloud Persistence (Same system as ARMYMAKER) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+</head>
+<body>
+
+  <!-- Full-Screen Document Workspace -->
+  <main class="document-fullscreen">
+    <section class="sheet-card">
+      <!-- Top Header with Top-Left Gear (Grups, Alumnes & Compte) & Top-Right Accumulated Logo -->
+      <div class="sheet-header">
+        <button type="button" class="corner-icon-btn corner-top-left" id="btnOpenGroupsModal" title="Grups, Alumnes i Compte" aria-label="Grups, Alumnes i Compte">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span class="corner-cloud-dot" id="cloudStatusDot"></span>
+        </button>
+
+        <h2 class="sheet-title" id="sheetMainTitle">REGISTRE DIARI</h2>
+
+        <button type="button" class="corner-icon-btn corner-top-right" id="btnToggleViewMode" title="Canviar entre Registre Diari i Registre Acumulat" aria-label="Registre Acumulat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <line x1="8" y1="16" x2="8" y2="12"></line>
+            <line x1="12" y1="16" x2="12" y2="8"></line>
+            <line x1="16" y1="16" x2="16" y2="10"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 1..35 Sessions Strip -->
+      <div class="sessions-strip-wrapper">
+        <div class="sessions-strip-header">Sessions</div>
+        <div class="sessions-strip" id="sessionsStripContainer" aria-label="Sessions de la 1 a la 35">
+          <!-- Populated dynamically 1..35 -->
+        </div>
+      </div>
+
+      <!-- The Main Registre Table -->
+      <div class="table-scroll-container">
+        <table class="registre-table" id="registreTable">
+          <thead>
+            <tr>
+              <!-- Course Cell IS the Group Selector -->
+              <th rowspan="2" class="curs-header-cell" title="Prem per canviar de grup o curs">
+                <select id="groupSelect" class="curs-cell-select" aria-label="Selecciona el curs o grup"></select>
+              </th>
+              <th colspan="5" class="group-cat-header benestar">BENESTAR PERSONAL</th>
+              <th colspan="5" class="group-cat-header actitud">ACTITUD I PARTICIPACIÓ</th>
+            </tr>
+            <tr>
+              <!-- BENESTAR PERSONAL (5 columns) -->
+              <th class="vertical-col-header benestar-col" title="Necesser"><span class="vertical-text-wrap">NECESSER</span></th>
+              <th class="vertical-col-header benestar-col" title="Endreç"><span class="vertical-text-wrap">ENDREÇ</span></th>
+              <th class="vertical-col-header benestar-col" title="Roba"><span class="vertical-text-wrap">ROBA</span></th>
+              <th class="vertical-col-header benestar-col" title="Hidratació"><span class="vertical-text-wrap">HIDRATACIÓ</span></th>
+              <th class="vertical-col-header benestar-col benestar-last" title="Escalfament"><span class="vertical-text-wrap">ESCALFAMENT</span></th>
+
+              <!-- ACTITUD I PARTICIPACIÓ (5 columns) -->
+              <th class="vertical-col-header actitud-col" title="Normes"><span class="vertical-text-wrap">NORMES</span></th>
+              <th class="vertical-col-header actitud-col" title="Implicació"><span class="vertical-text-wrap">IMPLICACIÓ</span></th>
+              <th class="vertical-col-header actitud-col" title="Joc Net"><span class="vertical-text-wrap">JOC NET</span></th>
+              <th class="vertical-col-header actitud-col" title="Germanor"><span class="vertical-text-wrap">GERMANOR</span></th>
+              <th class="vertical-col-header actitud-col" title="Material"><span class="vertical-text-wrap">MATERIAL</span></th>
+            </tr>
+          </thead>
+          <tbody id="registreTableBody">
+            <!-- Dynamically populated student rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bottom Corner of Daily View: Finalitzar sessió -->
+      <div class="sheet-footer-actions" id="dailyFooterActions">
+        <button type="button" class="btn btn-success btn-finalize-end" id="btnFinalizeSessionEnd">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span id="finalizeBtnEndText">Finalitzar sessió</span>
+        </button>
+      </div>
+
+      <!-- Bottom Corner of Accumulated View: Exportar PDF -->
+      <div class="sheet-footer-actions" id="accumFooterActions" style="display:none;">
+        <button type="button" class="btn btn-outline btn-finalize-end" id="btnExportPDFEnd">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 18 15 15"></polyline>
+          </svg>
+          <span>Exportar PDF</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL 0: Note / Observation for a Painted Cell in Daily View (Opened on 2nd tap) -->
+  <div class="modal-backdrop" id="modalCellNote" aria-hidden="true">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 id="cellNoteModalTitle">Anotació</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalCellNote">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="cellNoteModalSubtitle" style="font-size:0.82rem; color:var(--text-secondary); margin-bottom:0.65rem; font-weight:600;"></p>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="cellNoteTextarea">Nota o observació (opcional):</label>
+          <textarea id="cellNoteTextarea" class="form-textarea" rows="3" placeholder="Escriu aquí qualsevol detall o observació..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;">
+        <button type="button" class="btn btn-danger-ghost btn-sm" id="btnRemoveMarkFromNoteModal">Desmarcar casella</button>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="modalCellNote">Cancel·lar</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btnSaveCellNote">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 1: Cell Detail in Acumulat (Shows Dates & Notes) -->
+  <div class="modal-backdrop" id="modalCellDetail" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="cellDetailTitle">Detall de Marques</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalCellDetail">&times;</button>
+      </div>
+      <div class="modal-body" id="cellDetailBody">
+        <!-- Populated dynamically with dates and notes -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal="modalCellDetail">Tancar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Fitxa Completa de l'Alumne (In Acumulat view when clicking a student name) -->
+  <div class="modal-backdrop" id="modalStudentProfile" aria-hidden="true">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="studentProfileTitle">Fitxa Acumulada de l'Alumne</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalStudentProfile">&times;</button>
+      </div>
+      <div class="modal-body" id="studentProfileBody">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal="modalStudentProfile">Tancar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Gestió de Grups, Alumnes i Compte (Opened directly from the top-left gear button) -->
+  <div class="modal-backdrop" id="modalGroups" aria-hidden="true">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3>Grups i Alumnes</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalGroups">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Supabase Account & Auto-Sync Bar (Same auth system as ARMYMAKER) -->
+        <div class="account-sync-bar" id="accountSyncBar">
+          <div class="account-sync-info">
+            <span class="account-status-dot" id="accountModalDot"></span>
+            <div>
+              <div class="account-sync-title" id="accountSyncTitle">Sense sessió iniciada</div>
+              <div class="account-sync-subtitle" id="accountSyncSubtitle">Inicia sessió per guardar i sincronitzar els teus grups i registres entre dispositius</div>
+            </div>
+          </div>
+          <div class="account-sync-actions" id="accountSyncActions">
+            <button type="button" class="btn btn-primary btn-sm" id="btnOpenAuthModal">Iniciar sessió</button>
+          </div>
+        </div>
+
+        <!-- Group Selection / Creation Row -->
+        <div style="display:flex; gap:0.75rem; align-items:flex-end; flex-wrap:wrap; margin-bottom:1.15rem; padding-bottom:1rem; border-bottom:1px solid var(--border-light);">
+          <div style="flex:1; min-width:180px;">
+            <label style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:0.3rem;">Grup seleccionat per editar:</label>
+            <select id="manageGroupSelect" class="form-select"></select>
+          </div>
+          <button type="button" class="btn btn-outline" id="btnRenameGroup">Canviar nom</button>
+          <button type="button" class="btn btn-danger-ghost" id="btnDeleteGroup">Eliminar grup</button>
+        </div>
+
+        <!-- Create New Group Box -->
+        <div style="background:var(--bg-subtle); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:0.85rem; margin-bottom:1.15rem;">
+          <label style="display:block; font-size:0.8rem; font-weight:700; margin-bottom:0.4rem;">Crear un nou grup / curs:</label>
+          <div style="display:flex; gap:0.5rem;">
+            <input type="text" id="newGroupNameInput" class="form-input" placeholder="Ex: 1r ESO A, 5è Primària B, 6è A..." />
+            <button type="button" class="btn btn-primary" id="btnCreateGroup">+ Crear Grup</button>
+          </div>
+        </div>
+
+        <!-- Add Students to Active Group -->
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1rem; margin-bottom:0.5rem;">
+          <div>
+            <div class="form-group">
+              <label for="singleStudentInput">Afegir alumne individualment:</label>
+              <div style="display:flex; gap:0.4rem;">
+                <input type="text" id="singleStudentInput" class="form-input" placeholder="Nom i Cognoms (ex: Marc Alberich Puig)..." />
+                <button type="button" class="btn btn-primary" id="btnAddSingleStudent">Afegir</button>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="bulkStudentsTextarea">O enganxar llista d'alumnes (un per línia):</label>
+              <textarea id="bulkStudentsTextarea" class="form-textarea" rows="5" placeholder="Enganxa aquí la llista des d'Excel o Esfer@ (un alumne per fila)..."></textarea>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.4rem;">
+                <button type="button" class="btn btn-outline btn-sm" id="btnSortStudentsAlpha">Ordenar A-Z</button>
+                <button type="button" class="btn btn-primary btn-sm" id="btnAddBulkStudents">+ Afegir llista</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:0.82rem; font-weight:700; margin-bottom:0.35rem;">
+              Alumnes del grup (<span id="manageStudentCount">0</span>):
+            </label>
+            <div class="student-manage-list" id="manageStudentsList">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-close-modal="modalGroups">Fet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Auth Modal (Sign In / Create Account / Reset Password via Supabase, same as ARMYMAKER) -->
+  <div class="modal-backdrop" id="modalAuth" aria-hidden="true">
+    <div class="modal-card modal-sm">
+      <div class="modal-header">
+        <h3 id="authModalTitle">Iniciar sessió</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalAuth">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:0.85rem;">
+          Guarda i sincronitza automàticament els teus grups, alumnes i sessions al teu compte al núvol.
+        </p>
+        <form id="authForm">
+          <div class="form-group">
+            <label for="authEmailInput">Correu electrònic:</label>
+            <input type="email" id="authEmailInput" class="form-input" required autocomplete="email" placeholder="professor@escola.cat" />
+          </div>
+          <div class="form-group" id="authPasswordGroup">
+            <label for="authPasswordInput">Contrasenya (mín. 6 caràcters):</label>
+            <input type="password" id="authPasswordInput" class="form-input" minlength="6" autocomplete="current-password" placeholder="••••••••" />
+          </div>
+          <div id="authMessageBox" class="auth-message-box" style="display:none;"></div>
+          <button type="submit" class="btn btn-primary" id="btnAuthSubmit" style="width:100%; padding:0.55rem; margin-top:0.25rem;">
+            Iniciar sessió
+          </button>
+        </form>
+        <div class="auth-links-row" id="authLinksRow">
+          <button type="button" class="auth-link-btn" id="btnSwitchAuthMode">Crear un compte nou</button>
+          <button type="button" class="auth-link-btn muted" id="btnSwitchResetMode">Has oblidat la contrasenya?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: Finalize Session Confirmation -->
+  <div class="modal-backdrop" id="modalFinalizeConfirm" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="finalizeModalTitle">Finalitzar sessió</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="modalFinalizeConfirm">&times;</button>
+      </div>
+      <div class="modal-body" id="finalizeModalBody">
+        <!-- Populated dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" data-close-modal="modalFinalizeConfirm">Tornar a la fulla</button>
+        <button type="button" class="btn btn-success" id="btnConfirmFinalizeSession">
+          ✓ Confirmar i Guardar a l'Acumulat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

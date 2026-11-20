@@ -1,0 +1,1152 @@
+:root {
+  /* Sophisticated Minimalist Academic Palette */
+  --bg-app: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-row-even: #f9fbfd;
+  --bg-row-hover: #f1f5f9;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border-strong: #1e293b;
+  --border-grid: #cbd5e1;
+  --border-medium: #cbd5e1;
+  --border-light: #e2e8f0;
+
+  /* Benestar Personal (Refined Nordic Sky Palette) */
+  --benestar-header-bg: #d2ebf7;
+  --benestar-col-bg: #e7f5fc;
+  --benestar-accent: #0284c7;
+  --benestar-text: #0c4a6e;
+
+  /* Actitud i Participació (Refined Warm Champagne Palette) */
+  --actitud-header-bg: #f3e6c3;
+  --actitud-col-bg: #faf3df;
+  --actitud-accent: #d97706;
+  --actitud-text: #78350f;
+
+  /* Brand & Actions */
+  --primary: #0f172a;
+  --primary-hover: #1e293b;
+  --accent-blue: #2563eb;
+  --accent-blue-light: #eff6ff;
+  --success: #0f172a;
+  --success-hover: #1e293b;
+  --danger: #e11d48;
+  --danger-dark: #be123c;
+  --danger-light: #ffe4e6;
+
+  /* Shadows & Radius */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.14), 0 4px 10px -3px rgba(15, 23, 42, 0.06);
+  --radius-sm: 4px;
+  --radius-md: 7px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+
+  /* Compact Square Table Dimensions (205 + 10*32 = 525px, exact multiple of 35 sessions) */
+  --student-col-width: 205px;
+  --cell-size: 32px;
+  --cols-count: 10;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: var(--text-primary);
+  width: 100%;
+  min-height: 100vh;
+  line-height: 1.25;
+  overflow-x: hidden;
+}
+
+/* Discreet Corner Buttons (Flush with Left and Right Document Borders) */
+.corner-icon-btn {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.corner-top-left {
+  margin-left: -3px;
+}
+
+.corner-top-right {
+  margin-right: -3px;
+}
+
+.corner-icon-btn svg {
+  width: 19px;
+  height: 19px;
+  stroke-width: 1.85;
+}
+
+.corner-icon-btn:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border-color: var(--border-light);
+}
+
+.corner-top-right.active-view-mode {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+/* Tiny status dot on the gear icon for Supabase account sync status */
+.corner-cloud-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: none;
+}
+
+.corner-cloud-dot.connected {
+  background: #10b981;
+}
+
+.corner-cloud-dot.pending {
+  background: #f59e0b;
+}
+
+.corner-cloud-dot.syncing {
+  background: #3b82f6;
+  animation: pulseDot 1s infinite ease-in-out;
+}
+
+.corner-cloud-dot.error {
+  background: #e11d48;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.65; }
+}
+
+/* Document Container: Exact width shared by Header, Sessions Strip, Table, and Footer */
+.document-fullscreen {
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 0.45rem 0.5rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sheet-card {
+  width: calc(var(--student-col-width) + (var(--cols-count, 10) * var(--cell-size)));
+  max-width: 100%;
+  background: #ffffff;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sheet Header (Gear flush left, Title centered, Accumulated logo flush right) */
+.sheet-header {
+  width: 100%;
+  margin-bottom: 0.25rem;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.sheet-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #0f172a;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Session Strip 1..35 (Exact 100% width of sheet-card, flush with table) */
+.sessions-strip-wrapper {
+  width: 100%;
+  margin-bottom: 0.4rem;
+}
+
+.sessions-strip-header {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 0.14rem;
+}
+
+.sessions-strip {
+  display: grid;
+  grid-template-columns: repeat(35, minmax(0, 1fr));
+  border: 1.5px solid var(--border-strong);
+  background: var(--bg-surface);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.session-num-cell {
+  border-right: 1px solid var(--border-grid);
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  background: var(--bg-surface);
+  min-width: 0;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.session-num-cell:last-child {
+  border-right: none;
+}
+
+.session-num-cell:hover {
+  background: #f1f5f9;
+  color: var(--text-primary);
+}
+
+.session-num-cell.completed {
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 700;
+}
+
+.session-num-cell.active-session {
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+/* Main Registre Table Wrapper - Exact 100% width of sheet-card, flush with sessions-strip */
+.table-scroll-container {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  border: 1.5px solid var(--border-strong);
+  background: var(--bg-surface);
+  position: relative;
+}
+
+.registre-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.registre-table th,
+.registre-table td {
+  border: 1px solid var(--border-grid);
+}
+
+.registre-table thead tr:first-child th {
+  border-top: none;
+}
+
+.registre-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.registre-table tr th:first-child,
+.registre-table tr td:first-child {
+  border-left: none;
+}
+
+.registre-table tr th:last-child,
+.registre-table tr td:last-child {
+  border-right: none;
+}
+
+/* Top-Left Course Cell IS the Group Selector */
+.registre-table th.curs-header-cell {
+  width: var(--student-col-width);
+  min-width: var(--student-col-width);
+  max-width: var(--student-col-width);
+  background: var(--bg-surface);
+  border-right: 1.5px solid var(--border-strong);
+  border-bottom: 1.5px solid var(--border-strong);
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  position: sticky;
+  left: 0;
+  z-index: 30;
+  transition: background-color 0.14s ease;
+}
+
+.registre-table th.curs-header-cell:hover {
+  background-color: var(--bg-subtle);
+}
+
+.curs-cell-select {
+  width: 100%;
+  height: 100%;
+  min-height: 92px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  outline: none;
+  padding: 0.25rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* Group Category Headers (BENESTAR PERSONAL / ACTITUD I PARTICIPACIÓ) */
+.registre-table th.group-cat-header {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.25rem;
+  text-align: center;
+  border-bottom: 1px solid #94a3b8;
+}
+
+.registre-table th.group-cat-header.benestar {
+  background-color: var(--benestar-header-bg);
+  color: #0c4a6e;
+  border-right: 1.5px solid var(--border-strong);
+}
+
+.registre-table th.group-cat-header.actitud {
+  background-color: var(--actitud-header-bg);
+  color: #78350f;
+}
+
+/* Vertical Sub-Column Headers (Square cell width via table-layout: fixed) */
+.registre-table th.vertical-col-header {
+  height: 76px;
+  padding: 0.24rem 0;
+  vertical-align: bottom;
+  text-align: center;
+  border-bottom: 1.5px solid var(--border-strong);
+  position: relative;
+}
+
+.registre-table th.vertical-col-header.benestar-col {
+  background-color: var(--benestar-col-bg);
+  color: #0f172a;
+}
+
+.registre-table th.vertical-col-header.benestar-last {
+  border-right: 1.5px solid var(--border-strong);
+}
+
+.registre-table th.vertical-col-header.actitud-col {
+  background-color: var(--actitud-col-bg);
+  color: #0f172a;
+}
+
+.vertical-text-wrap {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin: 0 auto;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+/* Compact Student Rows (Square cell height) */
+.registre-table tbody tr {
+  height: var(--cell-size);
+  transition: background-color 0.1s ease, opacity 0.15s ease;
+}
+
+.registre-table tbody tr:nth-child(even) {
+  background-color: var(--bg-row-even);
+}
+
+.registre-table tbody tr:hover {
+  background-color: var(--bg-row-hover);
+}
+
+/* Student Name Cell (Sticky Left, Compact, with Faltes square flush right in Acumulat) */
+.student-name-cell {
+  width: var(--student-col-width);
+  min-width: var(--student-col-width);
+  max-width: var(--student-col-width);
+  height: var(--cell-size);
+  position: sticky;
+  left: 0;
+  z-index: 15;
+  border-right: 1.5px solid var(--border-strong) !important;
+  padding: 0 0.22rem 0 0.45rem;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.registre-table tbody tr:nth-child(odd) .student-name-cell {
+  background-color: var(--bg-surface);
+}
+
+.registre-table tbody tr:nth-child(even) .student-name-cell {
+  background-color: var(--bg-row-even);
+}
+
+.registre-table tbody tr:hover .student-name-cell {
+  background-color: var(--bg-row-hover);
+}
+
+.student-cell-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  height: 100%;
+  width: 100%;
+}
+
+.student-name-left {
+  display: flex;
+  align-items: center;
+  gap: 0.28rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.student-index {
+  font-size: 0.66rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.student-fullname {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+/* Small Square Faltes Badge Flush to the Far Right of the Student Name Cell (in Acumulat) */
+.student-faltes-square {
+  width: 21px;
+  height: 21px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  position: relative;
+  transition: transform 0.12s ease, background-color 0.12s ease;
+}
+
+.student-faltes-square.has-faltes {
+  background: #ffe4e6;
+  color: #be123c;
+  border: 1px solid #fda4af;
+}
+
+.student-faltes-square.has-faltes:hover {
+  background: #fecdd3;
+  transform: scale(1.08);
+}
+
+.student-faltes-square.zero-faltes {
+  background: transparent;
+  color: #cbd5e1;
+  border: 1px solid #e2e8f0;
+  font-weight: 500;
+}
+
+/* Tooltip for the Faltes Square inside the Student Name Cell */
+.student-faltes-square[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  right: 0;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  white-space: pre-line;
+  z-index: 80;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  min-width: 125px;
+  text-align: left;
+  line-height: 1.35;
+}
+
+/* Exaggerated Attenuated Row for Absent Student (No "FALTA" pill, no strikethrough on name) */
+.registre-table tbody tr.row-absent {
+  background-color: #e2e8f0 !important;
+}
+
+.registre-table tbody tr.row-absent .student-name-cell {
+  background-color: #e2e8f0 !important;
+}
+
+.registre-table tbody tr.row-absent .student-index,
+.registre-table tbody tr.row-absent .student-fullname {
+  opacity: 0.22;
+  color: #64748b;
+  text-decoration: none;
+  font-style: normal;
+}
+
+.registre-table tbody tr.row-absent .conduct-cell {
+  opacity: 0.15;
+  pointer-events: none;
+  background-color: #cbd5e1 !important;
+}
+
+/* Square Conduct Data Cells */
+.conduct-cell {
+  height: var(--cell-size);
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  transition: background-color 0.12s ease;
+}
+
+.conduct-cell.benestar-last {
+  border-right: 1.5px solid var(--border-strong) !important;
+}
+
+.conduct-cell:hover {
+  background-color: rgba(15, 23, 42, 0.04);
+}
+
+/* Painted Red Cell in Daily View (Sophisticated Crimson) */
+.conduct-cell.is-marked {
+  background-color: #e11d48 !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.conduct-cell.is-marked:hover {
+  background-color: #be123c !important;
+}
+
+/* ACUMULAT VIEW: Clean Number Inside Square Cell */
+.accum-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 0.25rem;
+  border-radius: 4px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transition: transform 0.12s ease;
+}
+
+.conduct-cell.has-accum:hover .accum-num-badge {
+  transform: scale(1.08);
+}
+
+.accum-zero {
+  color: #e2e8f0;
+  font-size: 0.65rem;
+  font-weight: 400;
+}
+
+.accum-benestar-1 {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.accum-benestar-high {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.accum-actitud-1 {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.accum-actitud-high {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.accum-faltes-badge {
+  background: #ffe4e6;
+  color: #be123c;
+  border: 1px solid #fda4af;
+}
+
+/* Hover Tooltip for PC */
+.conduct-cell[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  white-space: pre-line;
+  z-index: 60;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  min-width: 130px;
+  text-align: left;
+  line-height: 1.35;
+}
+
+/* Footer Actions (Finalitzar sessió / Exportar PDF) */
+.sheet-footer-actions {
+  width: 100%;
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-finalize-end {
+  padding: 0.42rem 0.95rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.38rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.btn-outline {
+  background: var(--bg-surface);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.btn-outline:hover {
+  background: var(--bg-subtle);
+  border-color: #94a3b8;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+.btn-success {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-success:hover {
+  background: #1e293b;
+}
+
+.btn-danger-ghost {
+  background: transparent;
+  color: var(--danger-dark);
+  border-color: transparent;
+}
+
+.btn-danger-ghost:hover {
+  background: var(--danger-light);
+}
+
+.btn-sm {
+  padding: 0.25rem 0.55rem;
+  font-size: 0.73rem;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem;
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  animation: modalFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-card.modal-sm {
+  max-width: 380px;
+}
+
+.modal-card.modal-lg {
+  max-width: 680px;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modal-header h3 {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.modal-close-btn:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 1rem 1.1rem;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 0.7rem 1.1rem;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Cell Detail Modal (Dates + Pencil Notes) */
+.detail-Visual-Tally-Box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.85rem;
+  margin-bottom: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.detail-rayitas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.rayita-date-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  gap: 0.65rem;
+}
+
+.rayita-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.red-mark-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: #e11d48;
+  flex-shrink: 0;
+}
+
+/* Forms & Group Management inside Modals */
+.form-group {
+  margin-bottom: 0.85rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 0.48rem 0.65rem;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  outline: none;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+}
+
+.student-manage-list {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.student-manage-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.42rem 0.65rem;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.82rem;
+}
+
+.student-manage-item:last-child {
+  border-bottom: none;
+}
+
+/* Supabase Account & Sync Bar inside Grups i Alumnes Modal */
+.account-sync-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1.15rem;
+}
+
+.account-sync-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.account-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #94a3b8;
+  flex-shrink: 0;
+}
+
+.account-status-dot.connected {
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+.account-status-dot.pending {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+}
+
+.account-status-dot.syncing {
+  background: #3b82f6;
+  animation: pulseDot 1s infinite ease-in-out;
+}
+
+.account-sync-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.account-sync-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.account-sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* Auth Modal Styles */
+.auth-message-box {
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.auth-message-box.error {
+  background: #ffe4e6;
+  border: 1px solid #fda4af;
+  color: #be123c;
+}
+
+.auth-message-box.success {
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+}
+
+.auth-links-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.85rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.auth-link-btn {
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-link-btn:hover {
+  text-decoration: underline;
+}
+
+.auth-link-btn.muted {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.toast-msg {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  animation: slideInToast 0.18s ease-out;
+}
+
+.toast-msg.success {
+  background: #065f46;
+}
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Vertical Screens (Mobile & Tablet Portrait): Fit 100% of the screen */
+@media (max-width: 860px), (orientation: portrait) {
+  :root {
+    --student-col-width: clamp(136px, 30vw, 200px);
+    --cell-size: clamp(26px, 5.2vw, 38px);
+  }
+
+  .document-fullscreen {
+    padding: 0.25rem 0.25rem 0.5rem;
+    align-items: stretch;
+  }
+
+  .sheet-card,
+  .table-scroll-container,
+  .registre-table {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .sheet-title {
+    font-size: 1rem;
+  }
+
+  .curs-cell-select {
+    font-size: 1.2rem;
+    min-height: 78px;
+  }
+
+  .registre-table th.vertical-col-header {
+    height: 66px;
+  }
+
+  .vertical-text-wrap {
+    font-size: 0.57rem;
+  }
+
+  .student-fullname {
+    font-size: 0.71rem;
+  }
+
+  .student-faltes-square {
+    width: 18px;
+    height: 18px;
+    font-size: 0.63rem;
+  }
+}
+
+/* Print Stylesheet (Exportar PDF) */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    background: #ffffff;
+  }
+  .corner-icon-btn,
+  .sheet-footer-actions {
+    display: none !important;
+  }
+  .document-fullscreen {
+    padding: 0;
+    margin: 0;
+  }
+  .table-scroll-container {
+    overflow: visible;
+  }
+}
